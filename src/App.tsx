@@ -7,19 +7,14 @@ import SignUp from './pages/auth/sign-up'
 import SideBar from './components/templates/sidebar'
 import { Toaster } from 'sonner'
 import useHttp from './http/use-Http'
-import RoundLoader from './components/molecules/loader'
-import { useContext } from 'react'
-import { ThemeProvider } from './state-management/context/ThemeContext'
 
 function App() {
 
   const { configureInterceptor } = useHttp();
-  const { loader } = useContext(ThemeProvider);
 
   configureInterceptor();
   return (
     <Fragment>
-      {loader && <RoundLoader />}
       <Toaster duration={3000} position='top-left' />
       <Routes>
         <Route path='/' element={<Navigate to={"/sign-in"} />} />

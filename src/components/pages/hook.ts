@@ -31,9 +31,9 @@ const useTaskManager = () => {
         }
     }
 
-    const updateWholeTask = async (id: string, body: TaskInstance, setTasks: Dispatch<SetStateAction<TaskInstance[]>>) => {
+    const updateWholeTask = async (id: string, task:string, setTasks: Dispatch<SetStateAction<TaskInstance[]>>) => {
         try {
-            const data = await updateMyTask(id, body);
+            const data = await updateMyTask(id, task);
             setTasks((prev) => prev.map((pre) => pre.id == data.id ? data : prev))
         } catch (error) {
 

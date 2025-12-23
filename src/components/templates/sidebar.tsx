@@ -11,7 +11,6 @@ const SideBar: React.FC<{ children: ReactNode }> = ({ children }) => {
 
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
 
     const goTo = useNavigate();
 
@@ -65,7 +64,7 @@ const SideBar: React.FC<{ children: ReactNode }> = ({ children }) => {
     return (
         <div className="flex justify-between items-center h-screen max-[380px]:px-5 bg-(--primary-dark-bg)">
             {/* SIDE BAR */}
-            {window.innerWidth > 440 && !isMobile &&
+            {window.innerWidth > 440  &&
                 <div className={`transition-all duration-300  bg-(--secondary-dark-bg) ${isOpen ? ` w-70` : ` w-20 `} absolute`}>
                     {isOpen ?
                         <div className="flex flex-col gap-4 p-4 px-6 mr-auto   shadow-[2px_0_5px_rgba(0,0,0,0.2)] min-h-screen ">

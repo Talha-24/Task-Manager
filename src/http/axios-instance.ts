@@ -1,4 +1,4 @@
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 
 export const BASE_URL = "http://192.168.100.106:3000/api";
 export const IMAGES_URL = "http://192.168.100.106:3000/api/public/"
