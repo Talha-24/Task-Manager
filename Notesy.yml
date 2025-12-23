@@ -1,0 +1,31 @@
+## React Router DOM:
+ Offers client and server side routing
+ ## SPA:
+ Single page applications are those applications in which 
+ content is rendered dynamically without reloading the page.
+
+# Benefits:
+ Content is rendered dynamically without reloading the page
+
+# Terms:
+ Browser Router : container which wraps the application. Make sure to rendered a specific component based on the url
+ Routes : container of route items, make sure to render the component at specific path.
+ Route : has path and element prop, it maps the specific react component with specific path. When mapped, that component is displayed.
+
+ Link: Opposite to anchor tag, <Link to ="/">Home ></Link>  navgiates to specific path without relaoding the page
+ NavLink: Works like Link tag, but hightlights the activated route <NavLink to="/" className="active-route" >Home</NavLink>
+
+ # Nested Routing:
+ <Routes>
+  <Route path"/dashboard" element={<Dashboard/>}>  /dashboard
+        <Route path="setting" element={<Setting/>  /dashboard/setting 
+        <Route path="home" element={<Home/>        /dashboard/home   
+        }
+  </Route>
+ </Routes> 
+
+ # Dynamic Routing:
+
+ <Route path="/user/:id" element={<UserDetails/>} />
+ id is send to this route 
+ that id is fetched throughout the userParams Hooks, and user specific data is fetched..

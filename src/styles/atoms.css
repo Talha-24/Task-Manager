@@ -1,0 +1,48 @@
+/* Input Field Shadow */
+.box-shadow {
+  box-shadow: 0px 0px 1px 0px var(--shadow);
+
+}
+
+
+/* Loader  */
+
+.loader-parent {
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-hover-dim);
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+  cursor: not-allowed;
+
+  &.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loader-container {
+    position: relative;
+
+    .outer {
+      position: absolute;
+      animation: rotate 3s infinite linear;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+}
