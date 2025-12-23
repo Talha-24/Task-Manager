@@ -13,10 +13,10 @@ const TaskManager = () => {
     const [input, setInput] = useState<string>("");
     const [tasks, setAllTasks] = useState<TaskInstance[]>([]);
 
-    const { addTask, getTasks, updateTask } = useTaskManager();
+    const { addTask, getTasks, updateTask,deleteSingleTask,updateWholeTask } = useTaskManager();
 
     const createTask = () => {
-        addTask(input, setInput);
+        addTask(input, setInput,setAllTasks);
     }
 
 
@@ -28,6 +28,9 @@ const TaskManager = () => {
         updateTask(id, category, setAllTasks);
     }
 
+    const deleteTask=async(id:string)=>{
+        deleteSingleTask(id,setAllTasks);
+    }
     useEffect(() => { fetAllTasks() }, [fetAllTasks])
 
 
@@ -65,7 +68,7 @@ const TaskManager = () => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-5  w-full  h-full max-[440px]:gap-3">
+                    <div className="flex flex-col gap-5  w-full  h-full max-[440px]:gap-3 overflow-x-auto">
 
 
                         {tasks?.map((elem: TaskInstance, idx: number) => {
@@ -81,7 +84,7 @@ const TaskManager = () => {
                                             <Button className="bg-(--primary-btn) h-7 w-7 flex items-center justify-center rounded-sm">
                                                 <PencilIcon width={18} height={18} className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
                                             </Button>
-                                            <Button className="bg-(--primary-btn-danger) h-7 w-7 flex items-center justify-center rounded-sm">
+                                            <Button className="bg-(--primary-btn-danger) h-7 w-7 flex items-center justify-center rounded-sm" onClick={()=>{deleteTask(elem.id)}}>
                                                 <TrashIcon width={18} height={18} className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
                                             </Button>
                                         </div>
@@ -103,7 +106,7 @@ const TaskManager = () => {
                                             <Button className="bg-(--primary-btn) h-7 w-7 flex items-center justify-center rounded-sm">
                                                 <PencilIcon width={18} height={18} className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
                                             </Button>
-                                            <Button className="bg-(--primary-btn-danger) h-7 w-7 flex items-center justify-center rounded-sm">
+                                            <Button className="bg-(--primary-btn-danger) h-7 w-7 flex items-center justify-center rounded-sm" onClick={()=>{deleteSingleTask(elem.id,setAllTasks)}}>
                                                 <TrashIcon width={18} height={18} className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
                                             </Button>
                                         </div>
