@@ -1,13 +1,16 @@
-import { createToDo, deleteTask, fetchAllTasks, updateMyTask, updateTaskStatus } from "../../database/supabase/supabaseClient"
 import type { Dispatch, SetStateAction } from "react";
 import type { TASK_CATEGORY, TaskInstance } from "../../services/interface/common.types";
+import { useHttp } from "../../hooks/useHttp";
 
 
 const useTaskManager = () => {
 
+    const {createToDo,fetchAllTasks,updateTaskStatus,updateMyTask,deleteTask}=useHttp();
+
 
     const addTask = async (task: string, setTask: Dispatch<SetStateAction<string>>, setAllTasks: Dispatch<SetStateAction<TaskInstance[]>>) => {
-        const data = await createToDo(task);
+        const data:any = await createToDo(task);
+        console.log("DATA ",data);
         setTask("");
         setAllTasks((prev) => [...prev, data])
 
@@ -33,7 +36,7 @@ const useTaskManager = () => {
 
     const updateWholeTask = async (id: string, task:string, setTasks: Dispatch<SetStateAction<TaskInstance[]>>) => {
         try {
-            const data = await updateMyTask(id, task);
+            const data:any =  updateMyTask(id, task);
             setTasks((prev) => prev.map((pre) => pre.id == data.id ? data : prev))
         } catch (error) {
 
@@ -48,7 +51,7 @@ const useTaskManager = () => {
             const deletedTask: TaskInstance = await deleteTask(id);
 
             setTasks((prev) =>
-                prev.filter((pre) => pre.id !== deletedTask.id))
+                prev.filter((pre) => pre.id !== deletedTask?.id))
 
         } catch (error) {
 

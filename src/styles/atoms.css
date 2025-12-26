@@ -1,4 +1,5 @@
 /* Input Field Shadow */
+
 .box-shadow {
   box-shadow: 0px 0px 1px 0px var(--shadow);
 
@@ -45,4 +46,45 @@
       transform: rotate(-360deg);
     }
   }
+}
+
+
+/*--- Input Fields  ---*/
+
+
+.primary-input{
+    background-color: var(--secondary-light-bg);
+    color: var(--primary-text);
+    border-radius: 5px;
+    padding-block: 10px;
+    padding-inline: 24px;
+    width: 400px;
+    
+    @media (max-width: 668px) {
+        width: 100%;
+    }
+
+    &::placeholder{
+        color: var(--text-light-gray);
+    }
+}
+
+.auth-input{
+    padding-inline: 10px;
+    outline:none;
+    font-size: 14px;
+    border-radius: 10px;
+
+        /* @apply px-2.5 py-1.5 placeholder:text-[14px] outline-none w-full text-[14px] rounded-l-md ; */
+
+}
+.secondary-input{
+    padding-block: 4px;
+    padding-inline:8px;
+    outline:none;
+    color: var(--primary-text);
+    ::placeholder{
+        color: text(--text-gray);
+        font-weight: 600;
+    }
 }

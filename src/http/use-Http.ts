@@ -1,7 +1,7 @@
 import axios from "axios"
 
 
-const useHttp = () => {
+const useHttppp = () => {
 
 
 
@@ -23,4 +23,4 @@ const useHttp = () => {
         configureInterceptor,
     }
 }
-export default useHttp
+export default useHttppp

@@ -1,13 +1,10 @@
 import type { AtomicSVgElement } from "./MenuIcon"
 
-const TrashIcon: React.FC<AtomicSVgElement> = ({ onClick, width = 24, height = 24, className,stroke="var(--primary-text)" }) => {
+const TrashIcon: React.FC<AtomicSVgElement> = () => {
 
     return (
-        <svg onClick={onClick} width={width} height={height} className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M3 6H21" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+
+      <svg stroke="currentColor"   fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4 "  height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg>
 
     )
 }

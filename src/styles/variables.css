@@ -1,5 +1,7 @@
 :root {
     /* Primary */
+    --primary-color: #4A5565;
+
     --primary-hover: #F3F4F6;
     --primary-selected: #F3F4F6;
     --primary-dark-bg: #F3F4F6;
@@ -14,11 +16,11 @@
     --text-light-gray: #a8a6a6;
     --shadow: #a8a6a6;
 
-
+    --primary-btn-danger: #FF0000;
     /*  */
 
     --primary-text: #000000;
-    --primary-hover-dim:rgba(19, 103, 200, 0.24);
+    --primary-hover-dim: rgba(19, 103, 200, 0.24);
 
     /* Filters */
     --active-filter: #000000;
@@ -26,7 +28,7 @@
 
 
 body.dark {
-
+    --primary-color: #6366E9;
     --primary-hover: #F3F4F6;
     --primary-selected: #FFFFFF;
     --primary-light-bg: #333333;
@@ -40,7 +42,7 @@ body.dark {
     --text-gray: #6A7282;
     --text-light-gray: #a8a6a6;
     --primary-text: #FFFFFF;
-    --primary-hover-dim:rgba(19, 103, 200, 0.24);
+    --primary-hover-dim: rgba(19, 103, 200, 0.24);
 
     /* Filter */
     --active-filter: white;

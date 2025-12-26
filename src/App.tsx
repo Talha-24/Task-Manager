@@ -1,30 +1,27 @@
 import './index.css'
 import { Fragment } from 'react/jsx-runtime'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Home from './components/templates/home'
-import SignIn from './pages/auth/sign-in'
-import SignUp from './pages/auth/sign-up'
-import SideBar from './components/templates/sidebar'
 import { Toaster } from 'sonner'
-import useHttp from './http/use-Http'
+import PublicRoutes from './routes/public-routes'
+import PrivateRoutes from './routes/private-routes'
+import useLocalStorage from './hooks/useLocalStorage'
 
 function App() {
 
-  const { configureInterceptor } = useHttp();
 
-  configureInterceptor();
+  const { getTheme } = useLocalStorage();
+
+  if (getTheme()) {
+    document.body.classList.add("dark");
+  }
+
   return (
     <Fragment>
       <Toaster duration={3000} position='top-left' />
       <Routes>
-        <Route path='/' element={<Navigate to={"/sign-in"} />} />
-        <Route path='/sign-in' element={<SignIn />} />
-        <Route path='/sign-up' element={<SignUp />} />
-        <Route path='/app/home/*' element={
-          <SideBar>
-            <Home />
-          </SideBar>
-        } />
+        <Route path='/' element={<Navigate to={"/public/sign-in"} />} />
+        <Route path='/public/*' element={<PublicRoutes />} />
+        <Route path='/app/*' element={<PrivateRoutes />} />
       </Routes>
     </Fragment>
   )

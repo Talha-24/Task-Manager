@@ -1,23 +1,30 @@
 const useLocalStorage = () => {
 
-    const getTheme = () => {
-        localStorage.getItem("theme");
+    const getTheme = ():string | null => {
+       return localStorage.getItem("theme");
     }
 
     const setTheme = (theme: string) => {
         localStorage.setItem("theme", theme)
     }
 
-
-    const getValue = (key: string) => {
-        return localStorage.getItem(key);
+    const removeTheme = () => {
+        localStorage.removeItem("theme");
     }
 
-    const setValue = (key: string, value: string) => {
+    const getValue = (key: string) => {
+        return JSON.parse(localStorage.getItem(key) as string);
+    }
+
+    const setValue = (key: string, value: string | undefined) => {
 
         value = JSON.stringify(value);
         localStorage.setItem(key, value);
 
+    }
+
+    const removeValue = (key: string) => {
+        localStorage.removeItem(key);
     }
 
     return {
@@ -25,6 +32,8 @@ const useLocalStorage = () => {
         setTheme,
         getValue,
         setValue,
+        removeValue,
+        removeTheme,
     }
 }
 export default useLocalStorage

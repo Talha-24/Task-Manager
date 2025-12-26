@@ -4,14 +4,32 @@
 @import "./styles/media-query.css";
 @import "./styles/base.css";
 @import "./styles/atoms.css";
+/* @import "./styles/utility.tailwind.css"; */
+
+body{
+  max-height: 100vh;
+  width: 100%;
+}
 a.active {
   color: red;
   font-weight: bold;
 }
 
-.my-active-class{
-    background-color: var(--primary-hover);
-    border-radius: 8px;
-    color: black;
 
+.my-active-class {
+  background-color: var(--primary-hover);
+  border-radius: 8px;
+  color: black;
+
+  svg {
+    color: black;
+  }
+  span{
+    color: black;
+  }
+}
+
+svg{
+  color: var(--primary-text);
+  font-size: 22px;
 }
