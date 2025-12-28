@@ -2,19 +2,30 @@ import { LuMoon } from "react-icons/lu";
 import { MdOutlineWbSunny } from "react-icons/md";
 import useTheme from "../../hooks/useTheme";
 import { useNavigate } from "react-router-dom";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import SideBar from "./sidebar";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const MainLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const [isDark, setIsDark] = useState<boolean>(false);
-    const [isSideBarOpen, setIsSideBarOpen] = useState<boolean>(false);
+    const [isSideBarOpen, setIsSideBarOpen] = useState<boolean>(true);
     const { toggleTheme } = useTheme();
+    const { getSideBar } = useLocalStorage();
 
 
 
 
+    // On First Time Render
+    useEffect(() => {
+        if (getSideBar() === "open") {
+            setIsSideBarOpen(true);
+        } else if (getSideBar() === "close") {
+            setIsSideBarOpen(false);
+        }
+    }, [])
 
+    
     return (
         <div className="flex justify-between items-center h-screen max-[380px]:px-5 bg-(--primary-dark-bg)">
             <SideBar isOpen={isSideBarOpen} setIsOpen={setIsSideBarOpen} />
@@ -28,7 +39,7 @@ const MainLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
                 {isDark ?
                     <MdOutlineWbSunny
                         fontSize={20}
-                         className="fixed top-6 right-5 text-white" />
+                        className="fixed top-6 right-5 text-white" />
                     :
                     <LuMoon fontSize={20} className="fixed top-6 right-5 text-black" />
                 }

@@ -4,29 +4,34 @@ import NavItem from "../atoms/NavItem";
 import ListIcon from "../../../public/icons/ListIcon";
 import SettingIcon from "../../../public/icons/SettingIcon";
 import MenuIcon from "../../../public/icons/MenuIcon";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, } from "react-router-dom";
 import { useAuthentication } from "../../hooks/useAuthentication";
 import { ROUTES } from "../../mixin/enums/enum.routes";
-import { BiLogOut } from "react-icons/bi";
+import { BiBook, BiLogOut } from "react-icons/bi";
+import { supabase } from "../../database/supabase/supabaseClient";
 const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>> }> = ({ isOpen, setIsOpen }) => {
-
-    const goTo = useNavigate();
 
     const { profile } = useAuthentication();
 
-    
+
+    const toggleSidebar = async () => {
+        const { data, error } = await supabase.from("personalization").select(`*,profiles(*)`).eq("id", localStorage.getItem("userId") as string).maybeSingle();
+
+        if (data) {
+            console.log("Hello", data);
+        }
+
+    }
+
+
 
     return (
         <Fragment>
             {/* FOR MOBILE SCREENS */}
-            <div className={`${window.innerWidth > 440 && `w-20`}`}>
-                {window.innerWidth < 440
-                    &&
-                    <MenuIcon className="absolute top-6 left-5" />
-                }
-            </div>
 
-            {window.innerWidth > 440 &&
+
+            {window.innerWidth > 440 ?
+
                 <div className={`transition-all duration-300  bg-(--secondary-dark-bg) ${isOpen ? ` w-70` : ` w-20 `} absolute`}>
                     {isOpen ?
                         <div className="flex flex-col gap-4 p-4 px-6 mr-auto   shadow-[2px_0_5px_rgba(0,0,0,0.2)] min-h-screen ">
@@ -53,20 +58,28 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
 
                                     <NavItem title="My Tasks"
 
-                                        svg={<ListIcon stroke="var(--primary-text)" />}  />
+                                        svg={<ListIcon stroke="var(--primary-text)" />} />
+                                </NavLink>
+
+
+                                <NavLink to={ROUTES.MY_JOURNALS}
+                                    className={({ isActive }) => (isActive ? 'my-active-class' : '')}
+                                >
+                                    <NavItem title="My Journals"
+                                        svg={<BiBook stroke="var(--primary-text)" />} />
                                 </NavLink>
                                 <NavLink to={ROUTES.SETTINGS}
                                     className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
 
                                 >
-                                    <NavItem title="Settings" svg={<SettingIcon fontSize={40} />}  />
+                                    <NavItem title="Settings" svg={<SettingIcon fontSize={40} />} />
                                 </NavLink>
 
-                                  <NavLink to={ROUTES.LOGOUT}
+                                <NavLink to={ROUTES.LOGOUT}
                                     className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
 
                                 >
-                                    <NavItem title="Settings" svg={<BiLogOut fontSize={40} />}  />
+                                    <NavItem title="Log out" svg={<BiLogOut fontSize={40} />} />
                                 </NavLink>
                             </div>
                         </div>
@@ -85,6 +98,15 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
                                         <ListIcon stroke="var(--primary-text)" />
                                     </div>
                                 </NavLink>
+                                <NavLink to={ROUTES.MY_JOURNALS}
+
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+
+                                >
+                                    <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
+                                        <BiBook stroke="var(--primary-text)" />
+                                    </div>
+                                </NavLink>
                                 <NavLink to={ROUTES.SETTINGS}
                                     className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
                                 >
@@ -95,7 +117,7 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
 
 
 
-                                  <NavLink to={ROUTES.LOGOUT}
+                                <NavLink to={ROUTES.LOGOUT}
                                     className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
                                 >
                                     <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
@@ -104,11 +126,67 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
                                 </NavLink>
 
 
-                                
+
                             </div>
                         </div>
 
                     }
+                </div>
+                :
+
+                <div className={``}>
+                        <MenuIcon onClick={() => { setIsOpen((prev) => !prev) }} className="absolute top-6 left-5" stroke="var(--primary-text)" />
+
+                    <div className="flex min-h-screen flex-col gap-4  h-screen p-4   mr-auto px-3  shadow-[2px_0_5px_rgba(0,0,0,0.2)] fixed">
+
+                        {isOpen &&
+
+
+                            <div className="flex flex-col gap-1">
+                                <NavLink to={ROUTES.TASK_MANAGER}
+
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+
+                                >
+                                    <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
+                                        <ListIcon stroke="var(--primary-text)" />
+                                    </div>
+                                </NavLink>
+                                <NavLink to={ROUTES.MY_JOURNALS}
+
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+
+                                >
+                                    <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
+                                        <BiBook stroke="var(--primary-text)" />
+                                    </div>
+                                </NavLink>
+                                <NavLink to={ROUTES.SETTINGS}
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+                                >
+                                    <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
+                                        <SettingIcon />
+                                    </div>
+                                </NavLink>
+
+
+
+                                <NavLink to={ROUTES.LOGOUT}
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+                                >
+                                    <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
+                                        <BiLogOut />
+                                    </div>
+                                </NavLink>
+
+
+
+                            </div>
+
+
+                        }
+                    </div>
+
                 </div>
             }
         </Fragment>

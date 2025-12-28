@@ -9,11 +9,17 @@ import useLocalStorage from './hooks/useLocalStorage'
 function App() {
 
 
-  const { getTheme } = useLocalStorage();
+  const { getTheme,} = useLocalStorage();
 
-  if (getTheme()) {
+  if (getTheme() === "dark") {
     document.body.classList.add("dark");
+  } else {
+    document.body.classList.add("light");
   }
+
+
+
+
 
   return (
     <Fragment>

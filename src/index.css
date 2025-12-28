@@ -4,6 +4,7 @@
 @import "./styles/media-query.css";
 @import "./styles/base.css";
 @import "./styles/atoms.css";
+@import "./styles/layouts.css";
 /* @import "./styles/utility.tailwind.css"; */
 
 body{

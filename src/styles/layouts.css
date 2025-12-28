@@ -1,0 +1,26 @@
+
+.auth-box {
+  padding-left: 2rem;  
+  padding-right: 2rem;
+  padding-top: 1.25rem; 
+  padding-bottom: 1.25rem;
+
+  border-radius: 0.5rem; 
+
+  width: 100%;           /* w-100 */
+  max-width: 31.25rem;   /* max-w-125 (125 * 0.25rem = 31.25rem) */
+
+  font-family: 'Poppins', sans-serif;
+
+  background-color: var(--primary-dark-bg);
+
+  /* full-box-shadow (assuming standard shadow) */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 500px) {
+  .auth-box {
+    padding: 1.5rem;  /* p-6 */
+    width: 92vw;
+  }
+}

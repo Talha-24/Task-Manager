@@ -2,7 +2,6 @@ import { createContext, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { supabase } from "../../database/supabase/supabaseClient";
 import type { TASK_CATEGORY, TaskInstance } from "../../services/interface/common.types";
-import { useAuthentication } from "../../hooks/useAuthentication";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 
@@ -18,7 +17,7 @@ interface HTTP_CONTEXT_INSTANCE {
     updateTaskStatus: PATCH;
     deleteTask: DELETE;
     updateMyTask: PUT;
-    loader:boolean;
+    loader: boolean;
 }
 
 
@@ -28,7 +27,7 @@ const defaultValues: HTTP_CONTEXT_INSTANCE = {
     updateTaskStatus: async () => ({ data: null as any, success: false, status: 500 }),
     deleteTask: async () => ({} as TaskInstance),
     updateMyTask: async () => ({} as TaskInstance),
-    loader:false,
+    loader: false,
 }
 
 export const HTTP_METHODS = createContext<HTTP_CONTEXT_INSTANCE>(defaultValues);
@@ -68,7 +67,7 @@ const HTTP_CONTEXT: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     async function fetchAllTasks() {
         setLoader(true);
-        const { data, error } = await supabase.from("my_tasks").select("*").eq("user_id", userId);
+        const { data, error } = await supabase.from("my_tasks").select("*").eq("user_id", userId).eq("is_deleted",false);
         if (!error && data) {
             setLoader(false);
             return { data: data as TaskInstance[], success: true, status: 200, message: "Data is successfully retrieved" }
@@ -99,7 +98,7 @@ const HTTP_CONTEXT: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     async function deleteTask(id: string) {
         setLoader(true);
-        const { data, error } = await supabase.from("my_tasks").delete().eq("id", id).select().maybeSingle();
+        const { data, error } = await (await supabase.from("my_tasks")).update([{ is_deleted: true }]).eq("id", id).select("*").maybeSingle();
 
         if (data) {
             toast.success("Task Deleted", {
@@ -141,7 +140,7 @@ const HTTP_CONTEXT: React.FC<{ children: ReactNode }> = ({ children }) => {
 
 
     return (
-        <HTTP_METHODS.Provider value={{ createToDo, updateTaskStatus, fetchAllTasks, deleteTask, updateMyTask,loader,}}>{children}</HTTP_METHODS.Provider>
+        <HTTP_METHODS.Provider value={{ createToDo, updateTaskStatus, fetchAllTasks, deleteTask, updateMyTask, loader, }}>{children}</HTTP_METHODS.Provider>
     )
 }
 

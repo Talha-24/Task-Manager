@@ -7,7 +7,7 @@ export class ForgotPasswordDTO {
 export class ResetPasswordDTO{
     token!:string;
     password!:string;
-    confirmPasword!:string;
+    confirmPassword!:string;
     constructor(data:Partial<ResetPasswordDTO>){
         Object.assign(this,data);
     }

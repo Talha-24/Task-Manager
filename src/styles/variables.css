@@ -24,6 +24,7 @@
 
     /* Filters */
     --active-filter: #000000;
+    --primary-shadow:rgb(139, 133, 138);
 }
 
 
@@ -46,5 +47,8 @@ body.dark {
 
     /* Filter */
     --active-filter: white;
+
+
+    --primary-shadow:rgb(14, 13, 14);
 
 }

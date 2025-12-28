@@ -4,10 +4,10 @@ interface AtomicInput extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
     formValidation?:any;
 }
 
-const Input: React.FC<AtomicInput> = ({ onChange, type, placeholder,value, className, id,disabled,checked,onClick,formValidation}) => {
+const Input: React.FC<AtomicInput> = ({ onChange, type, placeholder,value, className, id,disabled,checked,onClick,formValidation,title,required,pattern,...props}) => {
 
     return (
-        <input  type={type} value={value} onChange={onChange} placeholder={placeholder}   id={id} disabled={disabled} checked={checked} onClick={onClick} {...formValidation} className={className??" px-2.5 py-1.5 placeholder:text-[14px] outline-none w-full text-[14px] rounded-l-md"}  />
+        <input  type={type} value={value} onChange={onChange} placeholder={placeholder}   id={id} disabled={disabled} checked={checked} onClick={onClick} {...formValidation} title={title} required={required} pattern={pattern} className={className} {...props} />
     )
 }
 

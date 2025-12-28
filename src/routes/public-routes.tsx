@@ -6,14 +6,18 @@ import { useAuthentication } from "../hooks/useAuthentication"
 import { useEffect } from "react"
 import useNavigateHooks from "../hooks/useNavigate"
 import { ROUTES } from "../mixin/enums/enum.routes"
+import ForgotPassword from "../components/pages/forgot-password"
+import NewPassword from "../components/pages/new-password"
+import useLocalStorage from "../hooks/useLocalStorage"
 
 const PublicRoutes: React.FC = () => {
 
     const {session}=useAuthentication();
+    const {getValue}=useLocalStorage();
     const {goTo}=useNavigateHooks();
 
     useEffect(()=>{
-        if(session?.user){
+        if(getValue("session")){
             goTo(ROUTES.TASK_MANAGER);
             return;
         }
@@ -24,7 +28,8 @@ const PublicRoutes: React.FC = () => {
             <Routes>
                 <Route path="/sign-in" element={<SignIn />} />
                 <Route path="/sign-up" element={<SignUp />} />
-                <Route path="/forgot-password" element={<SignUp />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/new-password" element={<NewPassword />} />
             </Routes>
         </AuthLayout>
     )
