@@ -9,24 +9,29 @@ import useNavigateHooks from "../../hooks/useNavigate";
 import { toast } from "sonner";
 import { ROUTES } from "../../mixin/enums/enum.routes";
 import type { ForgotPasswordDTO, ResetPasswordDTO } from "../../mixin/classes/forgot-password.dto";
+import type { ThemeInstance } from "../../services/interface/common.types";
 
 type signUpInstance = (body: SignUpDTO) => void;
 type signInInstance = (body: SignInDTO) => void;
 type signOutInstance = () => void;
 type forgotPasswordInstance = (email: ForgotPasswordDTO) => void;
 type resetPasswordInstance = (body: ResetPasswordDTO) => void;
-
-
+type personalizationInstance = () => void;
+type updateThemeInstance=(body:ThemeInstance)=>void;
+type updateSideBarInstance=(body:boolean)=>void;
 interface AuthenticationDataInstance {
     signUpViaEmail: signUpInstance;
     signInViaEmail: signInInstance;
     signOut: signOutInstance;
     forgotPassword: forgotPasswordInstance;
-    resetPassword: resetPasswordInstance,
+    resetPassword: resetPasswordInstance;
+    getUserPersonalization: personalizationInstance;
+    updateTheme:updateThemeInstance;
+    updateSideBar:updateSideBarInstance;
     isAuthenticated: boolean;
-    session: Session | null | undefined,
+    session: Session | null | undefined;
     profile: User | null | undefined;
-    loader:boolean;
+    loader: boolean;
 }
 
 const defaultData: AuthenticationDataInstance = {
@@ -35,10 +40,13 @@ const defaultData: AuthenticationDataInstance = {
     signOut: () => { },
     forgotPassword: (email: ForgotPasswordDTO) => { },
     resetPassword: (body: ResetPasswordDTO) => { },
+    getUserPersonalization: () => { },
+    updateTheme:(body:ThemeInstance)=>{},
+    updateSideBar:()=>{},
     isAuthenticated: false,
     session: null,
     profile: null,
-    loader:false,
+    loader: false,
 }
 
 export const Authentication = createContext<AuthenticationDataInstance>(defaultData);
@@ -50,7 +58,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
     const [session, setSession] = useState<Session | null>();
     const [profile, setProfile] = useState<User>();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [loader,setLoader]=useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
 
     /*---- Authentication Via Supabase ----*/
 
@@ -64,7 +72,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
         const { data, error } = await supabase.auth.signUp({
             email: body.email,
             password: body.password,
-            phone:body.phone,
+            phone: body.phone,
             options: {
                 data: {
                     username: body.name,
@@ -78,34 +86,46 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
             setLoader(false);
         }
 
-        else if(!error) {
+        else if (!error) {
             toast.success("Account is created successfully ", {
                 description: `We have sent verification email at ${body.email}`,
                 duration: 5000,
             })
 
-            const newProfile = {
+
+
+
+            // if (profile) {
+            const defaultPersonalization = {
+                theme: "light",
+                sidebar: "open",
                 id: data.user?.id,
-                name: body.name,
-                email: body.email,
-                password: body.password,
-                picture: `https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=`,
-            };
-
-            const { data: profile, error } = await supabase.from("profiles").upsert([newProfile]).eq("id", data.user?.id).select("id").maybeSingle();
-            if (profile) {
-                const defaultPersonalization = {
-                    theme: "light",
-                    sidebar: "open",
-                    user_id: profile.id,
-                }
-                supabase.from("personalization").upsert([defaultPersonalization]);
-                setValue("sidebar", defaultPersonalization.sidebar);
-                setValue("theme", defaultPersonalization.theme);
             }
+            const { error } = await supabase.from("personalization").upsert([defaultPersonalization]);
 
-            setLoader(false);
+            setValue("sidebar", defaultPersonalization.sidebar);
+            setValue("theme", defaultPersonalization.theme);
 
+            if (!error) {
+
+                const newProfile = {
+                    name: body.name,
+                    email: body.email,
+                    password: body.password,
+                    phone: body.phone,
+                    picture: `https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=`,
+                    personalization_id: data?.user?.id,
+                };
+                const { data: profile } = await supabase.from("profiles").upsert([newProfile]).eq("email", body?.email).select("id").maybeSingle();
+
+                console.log("profileId", profile?.id);
+                setValue("profileId", profile?.id);
+
+                // }
+
+                setLoader(false);
+
+            }
         }
 
     }
@@ -141,7 +161,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
                 duration: 6000,
             })
             setValue("email", body.email);
-        } 
+        }
         setLoader(false);
     }
 
@@ -182,7 +202,34 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
 
     // PERSONALIZATION
 
+    const getUserPersonalization = async () => {
+        const { data, error } = await supabase.from("profiles").select(`*,personalization(*)`).eq("personalization_id", getValue("userId")).maybeSingle();
+        if (data) {
+            setValue("sidebar", data.personalization?.sidebar);
+            setValue("theme", data.personalization?.theme);
+            setProfile(data);
+        } else {
+        }
+    }
 
+    const updateSideBar = async (sidebar: boolean) => {
+        if (sidebar === true) {
+            await supabase.from("personalization").update([{ sidebar: "open" }]).eq("id",getValue("userId"));
+            setValue("sidebar","open");
+        } else {
+            await supabase.from("personalization").update([{ sidebar: "close" }]).eq("id",getValue("userId"));
+            setValue("sidebar","close");
+        }
+
+    }
+
+    const updateTheme = async (theme: "dark" | "light") => {
+        await supabase.from("personalization").update([{ theme }]).eq("id",getValue("userId"));
+    }
+
+    useEffect(() => {
+        getUserPersonalization();
+    }, [])
 
     // Keep checking if user is logged out
 
@@ -219,7 +266,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
 
 
     return (
-        <Authentication.Provider value={{ signInViaEmail, signUpViaEmail, signOut, forgotPassword, resetPassword, isAuthenticated, session, profile,loader}} >{children}</Authentication.Provider>
+        <Authentication.Provider value={{ signInViaEmail, signUpViaEmail, signOut, forgotPassword, resetPassword, getUserPersonalization,updateSideBar,updateTheme,isAuthenticated, session, profile, loader }} >{children}</Authentication.Provider>
     )
 }
 export default AuthenticationContext

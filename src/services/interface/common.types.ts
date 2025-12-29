@@ -4,3 +4,4 @@ export interface TaskInstance{
     category:string;
 }
 export type TASK_CATEGORY= "COMPLETED" | "ACTIVE";
+export type ThemeInstance="dark" | "light";

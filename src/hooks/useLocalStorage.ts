@@ -18,7 +18,13 @@ const useLocalStorage = () => {
     }
 
     const setValue = (key: string, value: unknown) => {
-        localStorage.setItem(key, value as string);
+        if(typeof value === "string"){
+
+            localStorage.setItem(key, value as string);
+        }else{
+            value=JSON.stringify(value);
+            localStorage.setItem(key,value as string);
+        }
     }
 
     const removeValue = (key: string) => {
@@ -32,6 +38,8 @@ const useLocalStorage = () => {
     const setSideBar = (value: string) => {
         return localStorage.setItem("sidebar", value)
     }
+
+    
 
     return {
         getTheme,
