@@ -1,47 +1,16 @@
-import { createContext, useState, type ReactNode } from "react";
-import { toast } from "sonner";
-import { supabase } from "../../database/supabase/supabaseClient";
-import type { TASK_CATEGORY, TaskInstance } from "../../services/interface/common.types";
+import { useState } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { supabase } from "../../database/supabase/supabaseClient";
+import { toast } from "sonner";
+import type { TASK_CATEGORY, TaskInstance } from "../../services/interface/common.types";
 
+const useToDoHttp = () => {
 
-type GET = () => Promise<{ data: TaskInstance[], success: boolean, status: number, message: string }>;
-
-type POST = (task: string,) => void;
-type DELETE = (id: string) => Promise<TaskInstance>;
-type PATCH = (id: string, category: TASK_CATEGORY) => Promise<{ data: TaskInstance, success: boolean; status: number }>;
-type PUT = (id: string, task: string) => Promise<TaskInstance>
-interface HTTP_CONTEXT_INSTANCE {
-    createToDo: POST;
-    fetchAllTasks: GET;
-    updateTaskStatus: PATCH;
-    deleteTask: DELETE;
-    updateMyTask: PUT;
-    loader: boolean;
-}
-
-
-const defaultValues: HTTP_CONTEXT_INSTANCE = {
-    createToDo: async (task: string,) => { },
-    fetchAllTasks: async () => ({ data: [], success: false, status: 500, message: "" }),
-    updateTaskStatus: async () => ({ data: null as any, success: false, status: 500 }),
-    deleteTask: async () => ({} as TaskInstance),
-    updateMyTask: async () => ({} as TaskInstance),
-    loader: false,
-}
-
-export const HTTP_METHODS = createContext<HTTP_CONTEXT_INSTANCE>(defaultValues);
-
-
-const HTTP_CONTEXT: React.FC<{ children: ReactNode }> = ({ children }) => {
 
 
     const [loader, setLoader] = useState<boolean>(false);
     const { getValue } = useLocalStorage();
     const userId = getValue("userId");
-
-
-
 
 
 
@@ -67,7 +36,7 @@ const HTTP_CONTEXT: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     async function fetchAllTasks() {
         setLoader(true);
-        const { data, error } = await supabase.from("my_tasks").select("*").eq("user_id", userId).eq("is_deleted",false);
+        const { data, error } = await supabase.from("my_tasks").select("*").eq("user_id", userId).eq("is_deleted", false);
         if (!error && data) {
             setLoader(false);
             return { data: data as TaskInstance[], success: true, status: 200, message: "Data is successfully retrieved" }
@@ -139,9 +108,17 @@ const HTTP_CONTEXT: React.FC<{ children: ReactNode }> = ({ children }) => {
 
 
 
-    return (
-        <HTTP_METHODS.Provider value={{ createToDo, updateTaskStatus, fetchAllTasks, deleteTask, updateMyTask, loader, }}>{children}</HTTP_METHODS.Provider>
-    )
+    return {
+        createToDo,
+        fetchAllTasks,
+        updateTaskStatus,
+        deleteTask,
+        updateMyTask,
+        loader,
+    }
+
+
+
 }
 
-export default HTTP_CONTEXT;
+export default useToDoHttp

@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 import PublicRoutes from './routes/public-routes'
 import PrivateRoutes from './routes/private-routes'
 import useLocalStorage from './hooks/useLocalStorage'
+import Dialog from './components/templates/dialog-modale'
 
 function App() {
 

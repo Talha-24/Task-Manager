@@ -32,6 +32,7 @@ interface AuthenticationDataInstance {
     session: Session | null | undefined;
     profile: User | null | undefined;
     loader: boolean;
+    isEmailSent:boolean;
 }
 
 const defaultData: AuthenticationDataInstance = {
@@ -47,6 +48,7 @@ const defaultData: AuthenticationDataInstance = {
     session: null,
     profile: null,
     loader: false,
+    isEmailSent:false,
 }
 
 export const Authentication = createContext<AuthenticationDataInstance>(defaultData);
@@ -59,6 +61,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
     const [profile, setProfile] = useState<User>();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [loader, setLoader] = useState<boolean>(false);
+    const [isEmailSent,setIsEmailSent]=useState<boolean>(false);
 
     /*---- Authentication Via Supabase ----*/
 
@@ -87,14 +90,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
         }
 
         else if (!error) {
-            toast.success("Account is created successfully ", {
-                description: `We have sent verification email at ${body.email}`,
-                duration: 5000,
-            })
-
-
-
-
+            setIsEmailSent(true);
             // if (profile) {
             const defaultPersonalization = {
                 theme: "light",
@@ -156,11 +152,9 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
             redirectTo: `http://localhost:5173/public/new-password`,
         });
         if (data) {
-            toast.success("Succeeded", {
-                description: `Verification link is successfully sent to ${body.email}. Go to your email and reset new password`,
-                duration: 6000,
-            })
             setValue("email", body.email);
+            setIsEmailSent(true);
+            console.log("DATA ",data);
         }
         setLoader(false);
     }
@@ -266,7 +260,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
 
 
     return (
-        <Authentication.Provider value={{ signInViaEmail, signUpViaEmail, signOut, forgotPassword, resetPassword, getUserPersonalization,updateSideBar,updateTheme,isAuthenticated, session, profile, loader }} >{children}</Authentication.Provider>
+        <Authentication.Provider value={{ signInViaEmail, signUpViaEmail, signOut, forgotPassword, resetPassword, getUserPersonalization,updateSideBar,updateTheme,isAuthenticated, session, profile, loader,isEmailSent }} >{children}</Authentication.Provider>
     )
 }
 export default AuthenticationContext

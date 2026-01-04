@@ -21,14 +21,14 @@ const SignUp = () => {
 
     const { emailValidation, passwordValidation, phoneNumberValidation, confirmPasswordValidation, validatePhoneNumber } = useValidations();
     const { goToSignIn, goTo } = useNavigateHooks();
-    const { signUpViaEmail, loader } = useAuthentication();
+    const { signUpViaEmail,isEmailSent, loader } = useAuthentication();
     // Hooks
     const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
     const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
 
 
     // React Hook Form
-    const { register, handleSubmit, watch, setValue, formState: { errors }, } = useForm<SignUpDTO>();
+    const { register, handleSubmit, watch, setValue,getValues, formState: { errors }, } = useForm<SignUpDTO>();
 
 
 
@@ -44,6 +44,35 @@ const SignUp = () => {
 
     return (
         <div className="auth-box">
+            {isEmailSent ? 
+            
+             <div>
+                    <div className="modal-container ">
+                        <div className="modal">
+                            <div className="modal-header">
+                                <h1 className="text-xl font-semibold  font-[Poppins] text-(--primary-color)">Account is created successfully!</h1>
+                            </div>
+                            <div className="modal-body">
+                                <div className="text-sm">
+                                    We have successfully sent a verification link to your email <h1 className="font-semibold  font-[Poppins] text-(--primary-color) text-lg"> {getValues("email")}</h1> Kindly check your email in Email box for further processing.
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank">
+                                <Button className="primary-auth-btn mt-4">
+                                        Open Gmail
+                                </Button>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            : 
+            
+            
+            
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 max-[500px]:gap-2 overflow-x-auto max-h-[70vh]" >
                 <h1 className="text-2xl font-semibold  font-[Poppins] text-(--primary-color)">Sign Up</h1>
                 {/* HIDDEN ON MOBILE DEVICES */}
@@ -70,6 +99,11 @@ const SignUp = () => {
                     </div>
                 </div>
             </form>
+            
+            
+            
+            }
+            
         </div>
     )
 

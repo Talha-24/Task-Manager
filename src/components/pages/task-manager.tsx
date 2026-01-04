@@ -6,7 +6,8 @@ import PlusIcon from "../../../public/icons/PlusIcon.tsx"
 import PencilIcon from "../../../public/icons/PencilIcon.tsx"
 import TrashIcon from "../../../public/icons/TrashIcon.tsx"
 import type { TASK_CATEGORY, TaskInstance } from "../../services/interface/common.types.ts";
-import { useHttp } from "../../hooks/useHttp.ts";
+import useToDoHttp from "../../http/api/todo.http.ts";
+import NoTask from "../molecules/no-task.tsx";
 const TaskManager = () => {
 
 
@@ -17,7 +18,7 @@ const TaskManager = () => {
     const [singleTaskId, setSingleTaskId] = useState<string>('');
 
     const { addTask, getTasks, updateTask, deleteSingleTask, updateWholeTask } = useTaskManager();
-    const { loader } = useHttp();
+    const { loader } = useToDoHttp();
 
 
 
@@ -50,11 +51,13 @@ const TaskManager = () => {
 
     const getTaskCount = (tasks: TaskInstance[], filter: string) => {
         if (filter === "all") {
-            return "Tasks Status : " + " Remaining : " + tasks.filter((task)=>task.category === "ACTIVE").length + "  Done " + tasks.filter((task)=>task.category == "COMPLETED").length;
-        } else if (filter === "active") {
-            tasks.filter((task) => task.category === "ACTIVE").length;
-        } else if (filter === "completed") {
-            tasks.filter((task)=>task.category === "COMPLETED").length;
+            return tasks?.length;
+        } 
+         else if (filter === "active") {
+          return  tasks.filter((task) => task.category === "ACTIVE").length;
+        } 
+         else if (filter === "completed") {
+          return  tasks.filter((task) => task.category === "COMPLETED").length;
         }
     }
 
@@ -71,6 +74,7 @@ const TaskManager = () => {
                                 <Input type="text" placeholder="Enter your task here..." value={input} onChange={(e) => { setInput(e.target.value) }} className="primary-input" pattern="^[A-Za-z0-9/s]*$" title="* Field is required" required />
                             </div>
                             <div>
+
                                 <Button disabled={loader} className="bg-(--primary-btn) text-white max-[350px]:px-2 max-[350px]:py-2.25 px-3 rounded-lg shadow-xs shadow-gray-500 flex items-center justify-center cursor-pointer w-fit py-2.25 max-sm:py-1.25" type="submit" >
                                     {isTaskUpdating ?
                                         <span className="flex items-center gap-1" >
@@ -101,62 +105,88 @@ const TaskManager = () => {
                             })}
                         </div>
                         <div>
-                            <p className="text-(--text-gray)">{getTaskCount(tasks,activeFilter)}</p>
+                            <p className="text-(--text-gray)">{getTaskCount(tasks, activeFilter)}</p>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-5  w-full  h-full max-[440px]:gap-3 overflow-x-auto">
 
+                        {/* Fallback on No Tasks */}
+                        {tasks.length == 0 ? <div>
+                            <NoTask/>
+                        </div> :
 
-                        {tasks?.map((elem: TaskInstance, idx: number) => {
+
+                            tasks?.map((elem: TaskInstance, idx: number) => {
 
 
-                            if (activeFilter == "all") {
-                                return (
+                                if (activeFilter == "all") {
+                                    return (
 
-                                    <div key={idx + idx} className="bg-(--secondary-dark-bg) rounded-lg py-3  px-6 w-full flex justify-between items-center box-shadow max-[440px]:px-4 max-[440px]:py-2" >
-                                        <Input type="checkbox" checked={elem.category == "COMPLETED"} className="placeholder: cursor-pointer mr-2 w-fit" onClick={() => { updateSingleTask(elem?.id, elem.category == "ACTIVE" ? "COMPLETED" : "ACTIVE") }} />
-                                        <Input type="text" placeholder={elem.category == "COMPLETED" ? elem.task : ""} value={elem.category == "ACTIVE" ? elem.task : ''} disabled={true} className="secondary-input" />
-                                        <div className="flex gap-3">
-                                            <Button disabled={loader} className="bg-(--primary-btn) h-7 w-7 flex items-center justify-center rounded-sm" onClick={() => {
-                                                setInput(elem.task),
-                                                    setSingleTaskId(elem.id);
-                                                setIsTaskUpdating(true);
-                                            }}>
-                                                <PencilIcon className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4 " color="red" />
-                                            </Button>
-                                            <Button className="bg-(--primary-btn-danger) px-1" onClick={() => { deleteTask(elem.id) }}>
-                                                <TrashIcon className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
-                                            </Button>
+                                        <div key={idx + idx} className="bg-(--secondary-dark-bg) rounded-lg py-3  px-6 w-full flex justify-between items-center box-shadow max-[440px]:px-4 max-[440px]:py-2" >
+                                            <Input type="checkbox" checked={elem.category == "COMPLETED"} disabled={elem.category === "COMPLETED"} className="placeholder: cursor-pointer mr-2 w-fit" onClick={() => { updateSingleTask(elem?.id, elem.category == "ACTIVE" ? "COMPLETED" : "ACTIVE") }} />
+                                            <Input type="text" placeholder={elem.category == "COMPLETED" ? elem.task : ""} value={elem.category == "ACTIVE" ? elem.task : ''} disabled={true} className={`secondary-input ${elem.category === "COMPLETED" && "placeholder:line-through"}`} />
+                                            {elem.category !== "COMPLETED" ?
+                                                <div className="flex gap-3">
+                                                    <Button disabled={loader} className="bg-(--primary-btn) h-7 w-7 flex items-center justify-center rounded-sm" onClick={() => {
+                                                        setInput(elem.task),
+                                                            setSingleTaskId(elem.id);
+                                                        setIsTaskUpdating(true);
+                                                    }}>
+                                                        <PencilIcon className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4 " color="red" />
+                                                    </Button>
+                                                    <Button className="bg-(--primary-btn-danger) px-1 rounded-sm" onClick={() => { deleteTask(elem.id) }}>
+                                                        <TrashIcon className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
+                                                    </Button>
+                                                </div>
+                                                : <Button disabled className="bg-green-700 text-white px-2 py-px  text-sm cursor-not-allowed">Completed</Button>
+
+                                            }
                                         </div>
-                                    </div>
-                                )
-                            }
+                                    )
+                                }
 
 
 
 
 
-                            else if (elem.category.toLowerCase() == activeFilter.toLowerCase()) {
-                                return (
+                                else if (elem.category.toLowerCase() == activeFilter.toLowerCase()) {
+                                    return (
 
-                                    <div key={idx + idx} className="bg-(--secondary-dark-bg) rounded-lg py-3  px-6 w-full flex justify-between items-center box-shadow max-[440px]:px-4 max-[440px]:py-2" >
-                                        <Input type="checkbox" checked={elem.category == "COMPLETED"} className="cursor-pointer mr-2" onClick={() => { updateSingleTask(elem?.id, elem.category == "ACTIVE" ? "COMPLETED" : "ACTIVE") }} />
-                                        <Input type="text" placeholder={elem.category == "COMPLETED" ? elem.task : ""} value={elem.category == "ACTIVE" ? elem.task : ''} disabled={elem.category == "COMPLETED"} className="placeholder:line-through py-1 w-full px-2 outline-none placeholder:text-(--text-gray) placeholder:font-medium text-(--primary-text)" />
-                                        <div className="flex gap-3">
-                                            <Button disabled={loader} className="bg-(--primary-btn) h-7 w-7 flex items-center justify-center rounded-sm">
-                                                <PencilIcon width={18} height={18} className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
-                                            </Button>
-                                            <Button disabled={loader} className="bg-(--primary-btn-danger) h-7 w-7 flex items-center justify-center rounded-sm" onClick={() => { deleteSingleTask(elem.id, setAllTasks) }}>
-                                                <TrashIcon width={18} height={18} className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
-                                            </Button>
+                                        <div key={idx + idx} className="bg-(--secondary-dark-bg) rounded-lg py-3  px-6 w-full flex justify-between items-center box-shadow max-[440px]:px-4 max-[440px]:py-2" >
+                                            <Input type="checkbox" checked={elem.category == "COMPLETED"} disabled={elem.category === "COMPLETED"} className="cursor-pointer mr-2" onClick={() => { updateSingleTask(elem?.id, elem.category == "ACTIVE" ? "COMPLETED" : "ACTIVE") }} />
+                                            <Input type="text" placeholder={elem.category == "COMPLETED" ? elem.task : ""} value={elem.category == "ACTIVE" ? elem.task : ''} disabled={elem.category == "COMPLETED"} className="placeholder:line-through py-1 w-full px-2 outline-none placeholder:text-(--text-gray) placeholder:font-medium text-(--primary-text)" />
+
+                                            {activeFilter === "completed" ?
+
+
+                                                <Button disabled className="bg-green-700 text-white px-2 py-px  text-sm cursor-not-allowed">Completed</Button>
+
+
+                                                :
+
+                                                <div className="flex gap-3">
+                                                    <Button disabled={loader} className="bg-(--primary-btn) h-7 w-7 flex items-center justify-center rounded-sm" onClick={() => {
+                                                        setInput(elem.task),
+                                                            setSingleTaskId(elem.id);
+                                                        setIsTaskUpdating(true);
+                                                    }}>
+                                                        <PencilIcon className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4 " color="red" />
+                                                    </Button>
+                                                    <Button className="bg-(--primary-btn-danger) px-1 rounded-sm" onClick={() => { deleteTask(elem.id) }}>
+                                                        <TrashIcon className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4" />
+                                                    </Button>
+                                                </div>
+                                            }
                                         </div>
-                                    </div>
-                                )
-                            }
+                                    )
+                                }
 
 
-                        })}
+                            })
+
+                        }
+
 
 
                     </div>

@@ -1,11 +1,11 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { TASK_CATEGORY, TaskInstance } from "../../services/interface/common.types";
-import { useHttp } from "../../hooks/useHttp";
+import useToDoHttp from "../../http/api/todo.http";
 
 
 const useTaskManager = () => {
 
-    const {createToDo,fetchAllTasks,updateTaskStatus,updateMyTask,deleteTask}=useHttp();
+    const {createToDo,fetchAllTasks,updateTaskStatus,updateMyTask,deleteTask}=useToDoHttp();
 
 
     const addTask = async (task: string, setTask: Dispatch<SetStateAction<string>>, setAllTasks: Dispatch<SetStateAction<TaskInstance[]>>) => {

@@ -1,4 +1,4 @@
-import EmptyTaskManager from "@/public/images/selfie 1.png"
+import EmptyTaskManager from "../../../public/images/selfie 1.png"
 
 const NoTask = ({ }) => {
 
