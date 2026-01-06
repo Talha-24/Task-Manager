@@ -6,6 +6,7 @@ import PublicRoutes from './routes/public-routes'
 import PrivateRoutes from './routes/private-routes'
 import useLocalStorage from './hooks/useLocalStorage'
 import Dialog from './components/templates/dialog-modale'
+import Products from './components/stripe/products'
 
 function App() {
 
@@ -25,11 +26,12 @@ function App() {
   return (
     <Fragment>
       <Toaster duration={3000} position='top-left' />
-      <Routes>
+      {/* <Routes>
         <Route path='/' element={<Navigate to={"/public/sign-in"} />} />
         <Route path='/public/*' element={<PublicRoutes />} />
         <Route path='/app/*' element={<PrivateRoutes />} />
-      </Routes>
+      </Routes> */}
+      <Products/>
     </Fragment>
   )
 }
