@@ -23,7 +23,7 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
     return (
         <Fragment>
             {/* FOR MOBILE SCREENS */}
-            <div className={`w-20`}>
+            <div className={`min-[440px]:w-20`}>
                 <MenuIcon onClick={() => { setIsOpen((prev) => !prev) }} className="absolute top-6 left-5" stroke="var(--primary-text)" />
             </div>
 
