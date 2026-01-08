@@ -6,6 +6,9 @@ import PublicRoutes from './routes/public-routes'
 import PrivateRoutes from './routes/private-routes'
 import useLocalStorage from './hooks/useLocalStorage'
 import Dialog from './components/templates/dialog-modale'
+import SupabaseProducts from './components/supabase-products'
+import PaymentSuccessful from './components/payment-successful'
+import PaymentError from './components/payment-error'
 
 function App() {
 
@@ -25,10 +28,18 @@ function App() {
   return (
     <Fragment>
       <Toaster duration={3000} position='top-left' />
-      <Routes>
+      {/* <Routes>
         <Route path='/' element={<Navigate to={"/public/sign-in"} />} />
         <Route path='/public/*' element={<PublicRoutes />} />
         <Route path='/app/*' element={<PrivateRoutes />} />
+      </Routes> */}
+
+      <Routes>
+        <Route path='/' element={      <SupabaseProducts/>} />
+        <Route path='/payment-successful' element={      <PaymentSuccessful/>} />
+        <Route path='/payment-error' element={      <PaymentError/>} />
+
+
       </Routes>
     </Fragment>
   )
