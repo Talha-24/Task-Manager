@@ -1,5 +1,5 @@
 
-import { createContext, useEffect, useState, type ReactNode } from "react"
+import { createContext, useEffect, useState, type Dispatch, type ReactNode, type SetStateAction } from "react"
 import { supabase } from "../../database/supabase/supabaseClient";
 import type { SignUpDTO } from "../../mixin/classes/sign-up.dto";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -32,6 +32,7 @@ interface AuthenticationDataInstance {
     session: Session | null | undefined;
     profile: User | null | undefined;
     loader: boolean;
+    setLoader: Dispatch<SetStateAction<boolean>>;
     isEmailSent:boolean;
 }
 
@@ -48,6 +49,7 @@ const defaultData: AuthenticationDataInstance = {
     session: null,
     profile: null,
     loader: false,
+    setLoader: (a)=>{ return a},
     isEmailSent:false,
 }
 
@@ -91,42 +93,19 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
 
         else if (!error) {
             setIsEmailSent(true);
-            // if (profile) {
-            const defaultPersonalization = {
-                theme: "light",
-                sidebar: "open",
-                id: data.user?.id,
-            }
-            const { error } = await supabase.from("personalization").upsert([defaultPersonalization]);
-
-            setValue("sidebar", defaultPersonalization.sidebar);
-            setValue("theme", defaultPersonalization.theme);
-
-            if (!error) {
-
-                const newProfile = {
-                    name: body.name,
-                    email: body.email,
-                    password: body.password,
-                    phone: body.phone,
-                    picture: `https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=`,
-                    personalization_id: data?.user?.id,
-                };
-                const { data: profile } = await supabase.from("profiles").upsert([newProfile]).eq("email", body?.email).select("id").maybeSingle();
-
-                console.log("profileId", profile?.id);
-                setValue("profileId", profile?.id);
-
-                // }
-
-                setLoader(false);
-
-            }
         }
 
     }
 
 
+    useEffect(()=>{
+
+        const session=JSON.parse(getValue("session") as string);
+        if(session){
+            initUserAuthentication(session);
+        }
+
+    },[])
 
     // Sign-In
 
@@ -134,6 +113,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
         setLoader(true);
         const { data, error } = await supabase.auth.signInWithPassword({ email: body.email, password: body.password });
         if (data.session) {
+            
             initUserAuthentication(data.session);
 
             goTo("/app/task-manager");
@@ -221,9 +201,6 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
         await supabase.from("personalization").update([{ theme }]).eq("id",getValue("userId"));
     }
 
-    useEffect(() => {
-        getUserPersonalization();
-    }, [])
 
     // Keep checking if user is logged out
 
@@ -260,7 +237,7 @@ const AuthenticationContext: React.FC<{ children: ReactNode }> = ({ children }) 
 
 
     return (
-        <Authentication.Provider value={{ signInViaEmail, signUpViaEmail, signOut, forgotPassword, resetPassword, getUserPersonalization,updateSideBar,updateTheme,isAuthenticated, session, profile, loader,isEmailSent }} >{children}</Authentication.Provider>
+        <Authentication.Provider value={{ signInViaEmail, signUpViaEmail, signOut, forgotPassword, resetPassword, getUserPersonalization,updateSideBar,updateTheme,isAuthenticated, session, profile, loader,setLoader,isEmailSent }} >{children}</Authentication.Provider>
     )
 }
 export default AuthenticationContext

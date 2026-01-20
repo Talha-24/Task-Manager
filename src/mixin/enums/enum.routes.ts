@@ -10,5 +10,7 @@ export enum ROUTES{
     TASK_MANAGER="/app/task-manager",
     SETTINGS="/app/settings",
     MY_JOURNALS="/app/my-journals",
+    SUBSCRIPTIONS="/app/subscriptions",
+    PRODUCTS="/app/products",
     LOGOUT="/app/logout",
 }

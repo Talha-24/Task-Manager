@@ -2,30 +2,32 @@ import { useEffect, useState } from "react";
 import { supabase } from "../database/supabase/supabaseClient";
 import axios from "axios";
 import { getPurchasedProductIds } from "../hooks/utils";
+import { useAuthentication } from "../hooks/useAuthentication";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const products=
    [
   {
     "product_name": "Porsche 911 Carrera",
-    "product_image": "https://example.com/images/porsche-911.jpg",
+    "product_image": "https://img.freepik.com/premium-vector/red-city-car-vector-illustration_648968-44.jpg?semt=ais_hybrid&w=740&q=80",
     "product_price": 11200000,
     "product_description": "Iconic rear-engine sports car delivering razor-sharp handling, timeless design, and everyday usability."
   },
   {
     "product_name": "Mercedes-AMG GT 63 S",
-    "product_image": "https://example.com/images/amg-gt-63.jpg",
+    "product_image": "https://img.freepik.com/free-psd/black-isolated-car_23-2151852894.jpg?semt=ais_hybrid&w=740&q=80",
     "product_price": 15950000,
     "product_description": "Luxury performance sedan with a handcrafted V8, brutal acceleration, and premium interior comfort."
   },
   {
     "product_name": "Lamborghini Huracán EVO",
-    "product_image": "https://example.com/images/lamborghini-huracan.jpg",
+    "product_image": "https://img.freepik.com/premium-vector/blue-car-flat-style-illustration-isolated-white-background_108231-795.jpg?semt=ais_hybrid&w=740&q=80",
     "product_price": 26100000,
     "product_description": "Naturally aspirated V10 supercar built for aggressive driving, exotic styling, and raw performance."
   },
   {
     "product_name": "Toyota Supra GR",
-    "product_image": "https://example.com/images/toyota-supra.jpg",
+    "product_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUr4T1HxkhfDA4fJCc2h0K32ZCFeVEDlQTog&s",
     "product_price": 5499000,
     "product_description": "Rear-wheel-drive sports coupe tuned for enthusiasts, combining sharp handling with turbocharged power."
   }
@@ -60,8 +62,7 @@ export interface Product {
 
 const SupabaseProducts = () => {
   const [availableProducts, setAvailableProduct] = useState<Product[]>([]);
-
-  const [sessionId,setSessionId,]=useState<string>("");
+  const {profile}=useAuthentication();
   const [isLoading,setIsLoading]=useState(false);
   
   const fetchProducts = async () => {
@@ -80,7 +81,7 @@ const SupabaseProducts = () => {
   const createCheckoutSession=async()=>{
     setIsLoading(true);
     try {        
-        const data=await axios.post("http://localhost:4242/create-checkout-session",{productIds:purchasedItemsIds});
+        const data=await axios.post(`http://localhost:4242/create-checkout-session/${profile?.id}`,{productIds:purchasedItemsIds});
         localStorage.setItem("sessionId",data.data.id);
         window.location.href=data?.data?.url;
     } catch (error) {
@@ -96,7 +97,6 @@ const SupabaseProducts = () => {
     setIsLoading(true);
     try {        
         const data=await axios.post("http://localhost:4242/create-checkout-session",{productIds:[purchased_id]});
-        localStorage.setItem("sessionId",data.data.id);
         window.location.href=data?.data?.url;
     } catch (error) {
         
@@ -122,24 +122,26 @@ const [purchasedIds, setPurchasedIds] = useState<string[]>([]);
 
 useEffect(() => {
 
+  if(profile?.id){
   const fetchPurchased = async () => {
-    const ids = await getPurchasedProductIds(localStorage.getItem("sessionId") as string);
+    const ids = await getPurchasedProductIds(profile?.id);
     setPurchasedIds(ids);
   };
 
+  
   fetchPurchased();
-}, []);
+}
+}, [profile?.id]);
 
 
   return (
-    <div className="flex flex-row flex-wrap w-full gap-5">
+    <div className="max-h-screen">
+    <div className="flex flex-row flex-wrap w-full gap-5 w-full">
       {availableProducts.map((product) => {
           const isSelected = purchasedItemsIds.includes(product.id);
 
         return (
           <div className="w-[220px] rounded-xl border bg-white shadow-sm hover:shadow-md transition overflow-hidden">
-            {/* Image */}
-            <input type="radio" />
             <div className="h-[120px] w-full bg-gray-100">
               <img
                 src={product.product_image}
@@ -203,6 +205,7 @@ useEffect(() => {
         <button disabled={isLoading} onClick={createCheckoutSession} className="mt-2 w-full rounded-lg bg-black text-white text-xs py-2 hover:bg-gray-800 bg-yellow-400 w-100">Checkout </button>
      </div>
       </div>}
+      </div>
     </div>
   );
 };

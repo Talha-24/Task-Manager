@@ -8,6 +8,7 @@ import TrashIcon from "../../../public/icons/TrashIcon.tsx"
 import type { TASK_CATEGORY, TaskInstance } from "../../services/interface/common.types.ts";
 import useToDoHttp from "../../http/api/todo.http.ts";
 import NoTask from "../molecules/no-task.tsx";
+import Textarea from "../atoms/textarea.tsx";
 const TaskManager = () => {
 
 
@@ -71,7 +72,7 @@ const TaskManager = () => {
                     <form onSubmit={onSubmit} className="flex flex-col gap-2">
                         <div className="flex items-center justify-start  gap-3">
                             <div>
-                                <Input type="text" placeholder="Enter your task here..." value={input} onChange={(e) => { setInput(e.target.value) }} className="primary-input" pattern="^[A-Za-z0-9/s]*$" title="* Field is required" required />
+                                <Textarea placeholder="Enter your task here..." value={input} onChange={(e) => { setInput(e.target.value) }} className="primary-textarea"  title="* Field is required" required />
                             </div>
                             <div>
 

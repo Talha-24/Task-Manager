@@ -28,19 +28,15 @@ function App() {
   return (
     <Fragment>
       <Toaster duration={3000} position='top-left' />
-      {/* <Routes>
+      <Routes>
         <Route path='/' element={<Navigate to={"/public/sign-in"} />} />
         <Route path='/public/*' element={<PublicRoutes />} />
         <Route path='/app/*' element={<PrivateRoutes />} />
-      </Routes> */}
-
-      <Routes>
-        <Route path='/' element={      <SupabaseProducts/>} />
+      </Routes>
+      {/* <Routes>       <Route path='/' element={      <SupabaseProducts/>} />
         <Route path='/payment-successful' element={      <PaymentSuccessful/>} />
         <Route path='/payment-error' element={      <PaymentError/>} />
-
-
-      </Routes>
+        </Routes> */}
     </Fragment>
   )
 }

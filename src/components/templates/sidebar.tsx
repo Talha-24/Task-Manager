@@ -8,6 +8,7 @@ import { NavLink, } from "react-router-dom";
 import { useAuthentication } from "../../hooks/useAuthentication";
 import { ROUTES } from "../../mixin/enums/enum.routes";
 import { BiBook, BiLogOut } from "react-icons/bi";
+import { BsCardImage, BsCurrencyDollar } from "react-icons/bs";
 const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>> }> = ({ isOpen, setIsOpen }) => {
 
     const { profile,updateSideBar} = useAuthentication();
@@ -65,11 +66,22 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
                                     <NavItem title="My Journals"
                                         svg={<BiBook stroke="var(--primary-text)" />} />
                                 </NavLink>
-                                <NavLink to={ROUTES.SETTINGS}
+                                  
+                                <NavLink to={ROUTES.PRODUCTS}
                                     className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
 
                                 >
-                                    <NavItem title="Settings" svg={<SettingIcon fontSize={40} />} />
+                                    <NavItem title="Products" svg={
+                                        <BsCardImage stroke="var(--primary-text)" />} />
+                                </NavLink>
+
+
+                                 <NavLink to={ROUTES.SUBSCRIPTIONS}
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+
+                                >
+                                    <NavItem title="Subscriptions" svg={
+                                        <BsCurrencyDollar stroke="var(--primary-text)" />} />
                                 </NavLink>
 
                                 <NavLink to={ROUTES.LOGOUT}
@@ -104,6 +116,26 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
                                         <BiBook stroke="var(--primary-text)" />
                                     </div>
                                 </NavLink>
+
+
+                                <NavLink to={ROUTES.PRODUCTS}
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+
+                                >
+                                    <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
+                                        <BsCardImage stroke="var(--primary-text)" />
+                                    </div>
+                                </NavLink>
+
+                                 <NavLink to={ROUTES.SUBSCRIPTIONS}
+                                    className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
+
+                                >
+                                    <div className="burger-icon flex items-center justify-center py-2  rounded-lg cursor-pointer">
+                                        <BsCurrencyDollar stroke="var(--primary-text)" />
+                                    </div>
+                                </NavLink>
+
                                 <NavLink to={ROUTES.SETTINGS}
                                     className={({ isActive }) => (isActive ? "my-active-class" : "inactive")}
                                 >

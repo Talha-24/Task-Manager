@@ -115,3 +115,33 @@
   cursor:pointer;
   font-weight: 550;
 }
+
+.primary-textarea{
+  background-color: var(--secondary-light-bg);
+    color: var(--primary-text);
+    border-radius: 5px;
+    /* padding-block: 10px; */
+    /* padding-inline: 24px; */
+    padding-block: 9px;
+    padding-inline: 14px;
+    height: 45px;
+    width: 400px;
+    outline:none;
+    &::-webkit-scrollbar{
+    display:none;
+
+    }
+   
+    
+    @media (max-width: 668px) {
+        width: 100%;
+        padding-block:5px;
+    }
+
+    &::placeholder{
+        color: var(--text-light-gray);
+    } 
+}
+
+
+

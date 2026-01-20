@@ -2,10 +2,10 @@ interface AtomicTextArea extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaE
     placeholder?: string;
 }
 
-const Textarea: React.FC<AtomicTextArea> = ({ onClick,  placeholder, className, id }) => {
+const Textarea: React.FC<AtomicTextArea> = ({ onClick,  placeholder, className, id,...props }) => {
 
     return (
-        <textarea onClick={onClick} placeholder={placeholder} className={className} id={id} ></textarea>
+        <textarea onClick={onClick} placeholder={placeholder} className={className} id={id} {...props} ></textarea>
     )
 }
 
