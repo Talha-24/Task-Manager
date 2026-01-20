@@ -66,9 +66,13 @@
     outline:none;
     
     @media (max-width: 668px) {
-        width: 100%;
+        width: 300px;
         padding-block:5px;
     }
+@media (max-width: 410px) {
+        width: 100%;
+        padding-block:5px;
+    } 
 
     &::placeholder{
         color: var(--text-light-gray);
@@ -131,12 +135,16 @@
     display:none;
 
     }
-   
-    
+
     @media (max-width: 668px) {
-        width: 100%;
+        width: 300px;
         padding-block:5px;
-    }
+    } 
+
+    @media (max-width: 410px) {
+         width: 100%;
+        padding-block:5px;
+    }  
 
     &::placeholder{
         color: var(--text-light-gray);

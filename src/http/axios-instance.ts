@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "http://192.168.100.106:3000/api";
+export const BASE_URL = "http://localhost:4242"
 export const IMAGES_URL = "http://192.168.100.106:3000/api/public/"
 
 const api = axios.create({

@@ -70,13 +70,13 @@ const TaskManager = () => {
                     <h1 className="text-3xl font-bold text-center text-(--primary-text) max-sm:text-2xl">My Tasks</h1>
 
                     <form onSubmit={onSubmit} className="flex flex-col gap-2">
-                        <div className="flex items-center justify-start  gap-3">
-                            <div>
+                        <div className="flex items-center justify-start  gap-3 max-[387px]:flex-col max-[387px]:gap-[2px]">
+                            <div className="">
                                 <Textarea placeholder="Enter your task here..." value={input} onChange={(e) => { setInput(e.target.value) }} className="primary-textarea"  title="* Field is required" required />
                             </div>
-                            <div>
+                            <div className="w-full">
 
-                                <Button disabled={loader} className="bg-(--primary-btn) text-white max-[350px]:px-2 max-[350px]:py-2.25 px-3 rounded-lg shadow-xs shadow-gray-500 flex items-center justify-center cursor-pointer w-fit py-2.25 max-sm:py-1.25" type="submit" >
+                                <Button disabled={loader} className="bg-(--primary-btn) text-white max-[350px]:px-2 max-[350px]:py-2.25 px-3 rounded-sm shadow-xs shadow-gray-500 flex items-center justify-center cursor-pointer w-fit py-2.25 max-sm:py-1.25 max-[387px]:w-full" type="submit" >
                                     {isTaskUpdating ?
                                         <span className="flex items-center gap-1" >
                                             <PencilIcon width={18} height={18} className="cursor-pointer max-[440px]:w-4 max-[440px]:h-4 mr-1" />

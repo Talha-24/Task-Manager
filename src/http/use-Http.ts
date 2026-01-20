@@ -1,4 +1,5 @@
 import axios from "axios"
+import api from "./axios-instance"
 
 
 const useHttppp = () => {
@@ -6,13 +7,22 @@ const useHttppp = () => {
 
 
     const configureInterceptor = () => {
-        axios.interceptors.request.use((config) => {
-            // setLoader(true);
+        const token=localStorage.getItem("token");
+
+        
+
+        api.interceptors.request.use((config) => {
+
+            const token="token";
+            if(token){
+                config.headers.Authorization=`Bearer ${token}`;
+            }
+
             return config;
         })
 
-        axios.interceptors.response.use((config) => {
-            // setLoader(false);
+        api.interceptors.response.use((config) => {
+            
             return config;
         })
 

@@ -12,6 +12,7 @@ import MyJournals from "../components/pages/my-journals"
 import SupabaseProducts from "../components/supabase-products"
 import Subscriptions from "../components/subscriptions"
 import ProductRoutes from "./products-routes"
+import Users from "../components/pages/users"
 
 
 const PrivateRoutes = () => {
@@ -47,6 +48,7 @@ const PrivateRoutes = () => {
                 <Route path="settings" element={<Settings />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="subscriptions" element={<Subscriptions />} />
+                <Route path="users" element={<Users />} />
                 <Route path="logout" element={<LogOut />} />
                 <Route path="products/*" element={<ProductRoutes />} />
             </Routes>

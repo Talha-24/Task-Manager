@@ -28,7 +28,7 @@ const SideBar: React.FC<{ isOpen: boolean, setIsOpen: Dispatch<SetStateAction<bo
                 <MenuIcon onClick={() => { setIsOpen((prev) => !prev) }} className="absolute top-6 left-5" stroke="var(--primary-text)" />
             </div>
 
-            {window.innerWidth > 440 &&
+            {true &&
 
                 <div className={`transition-all duration-300  bg-(--secondary-dark-bg) ${isOpen ? ` w-70` : ` w-20 `} absolute`}>
                     {isOpen ?

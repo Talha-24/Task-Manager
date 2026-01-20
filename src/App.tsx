@@ -5,13 +5,8 @@ import { Toaster } from 'sonner'
 import PublicRoutes from './routes/public-routes'
 import PrivateRoutes from './routes/private-routes'
 import useLocalStorage from './hooks/useLocalStorage'
-import Dialog from './components/templates/dialog-modale'
-import SupabaseProducts from './components/supabase-products'
-import PaymentSuccessful from './components/payment-successful'
-import PaymentError from './components/payment-error'
 
 function App() {
-
 
   const { getTheme,} = useLocalStorage();
 
